@@ -2,12 +2,7 @@
     "name": "Gnostic",
     "description": "From Notion notes to quizzes.",
     "version": "1.0",
-    "manifest_version": 2,
-    "background": {
-        "scripts": [
-            "background.js"
-        ]
-    },
+    "manifest_version": 3,
     "permissions": [
         "tabs",
         "notifications",
@@ -15,7 +10,7 @@
    	    "activeTab",
         "scripting"
     ],
-    "browser_action": {
+    "action": {
         "default_popup": "popup.html",
         "default_icon": "icon.png"
     },
@@ -29,6 +24,20 @@
             ],
             "js": [
                 "background.js"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "logo.png",
+                "loading.gif",
+                "logo_black.png",
+                "loading_black.gif"
+            ],
+            "matches": [
+                "https://www.notion.so/*"
             ]
         }
     ]
