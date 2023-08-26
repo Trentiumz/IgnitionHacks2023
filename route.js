@@ -1,5 +1,4 @@
 const OpenAI = require('openai')
-const { OpenAIStream, StreamingTextResponse } = require('ai');
  
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({

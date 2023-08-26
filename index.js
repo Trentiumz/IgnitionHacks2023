@@ -1,7 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
+
 require('dotenv').config()
 const app = express()
+app.use(cors())
 const port = 3000
 
 const { Client } = require("@notionhq/client")
@@ -64,7 +67,7 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   
   const questions = await generateQuestions(note_list)
   const response = await notion.pages.create(create_questions_page(questions, id))
-  res.json(response)
+  res.status(200).json(response)
 })
 
 app.post('/read-page-content', async (req, res) => {
