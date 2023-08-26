@@ -24,7 +24,7 @@ const generateQuestions = async (notes) => {
       // split by a period
       const splitByP = line.split(".", 2)
       const numStr = splitByP[0]
-
+      console.log(splitByP)
       // whether the current line is the first in the question response
       let isFirst = false
 
@@ -50,7 +50,7 @@ const generateQuestions = async (notes) => {
         questions[curQ-1].question = splitByP[1].trim()
       } else {
         // subsequent lines form answers
-        questions[curQ-1].answer.push(line).trim()
+        questions[curQ-1].answer.push(line.trim())
       } 
     }
   })

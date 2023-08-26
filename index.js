@@ -1,12 +1,15 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 require('dotenv').config()
 const app = express()
 const port = 3000
 
 const { Client } = require("@notionhq/client")
 const notion = new Client({ auth: process.env.NOTION_KEY })
+const jsonParser = bodyParser.json()
 
-const { runtime, queryGPT } = require('./route')
+const { generateQuestions } = require('./route')
+const {create_questions_page} = require('./notion-question-create')
 
 const rich_to_plain = (rich_text) => {
   return rich_text.reduce((acc, cur) => acc + cur.plain_text, "")
@@ -44,137 +47,6 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
   }
 }
 
-const isIntegral = (str) => {
-    return /^\+?(0|[1-9]\d*)$/.test(str);
-}
-
-const generateQuestions = async (notes) => {
-  // generate 15 questions
-  const lines = ["Generate up to 15 questions and answers that are self-contained within this article. For each answer, give two direct quotes within the article supporting it enclosed in quotation marks with parentheses noting the line number you found the quote in. Make sure to test a random subset of lines:", ...(notes.map((x, ind) => `${ind + 1}. "${x[0]}"`))]
-  const query = lines.join('\n')
-  const response = (await queryGPT(query, temperature = 0)).split('\n')
-
-  // loop through the questions
-  let curQ = 0
-  let inOrder = true
-
-  // list of questions
-  const questions = []
-
-  // parse response
-  response.forEach((line) => {
-    if(line.length > 0){
-      // split by a period
-      const splitByP = line.split(".", 2)
-      const numStr = splitByP[0]
-
-      // whether the current line is the first in the question response
-      let isFirst = false
-
-      if(isIntegral(numStr)){
-        // if it is the first in the response, then set the current question number
-        const num = parseInt(numStr)
-        if(num === curQ + 1){
-          curQ = num
-          isFirst = true
-        } else {
-          inOrder = false
-        }
-      }
-
-      // add question for new questions
-      if(questions.length < curQ) questions.push({
-        question: "",
-        answer: []
-      })
-
-      // the first line is a question
-      if(isFirst) {
-        questions[curQ-1].question = splitByP[1].trim()
-      } else {
-        // subsequent lines form answers
-        questions[curQ-1].answer.push(line).trim()
-      } 
-    }
-  })
-
-  if(!inOrder){
-    console.log("UNABLE TO ORDER QUESTIONS PROPERLY -- log of response:")
-    console.log(response)
-  }
-
-  return questions
-}
-
-const create_toggle = (top_text, children) => {
-  return {
-    "object": "block",
-    "type": "toggle",
-    "has_children": children.length > 0,
-    "toggle": {
-      "rich_text": [
-        {"type": "text", "text": {"content": top_text}, "plain_text": "Question"}
-      ],
-      "children": children.length > 0 ? children : undefined
-    }
-  }
-}
-
-const create_paragraph = (text, children=[]) => {
-  return {
-    "object": "block",
-    "type": "paragraph",
-    "has_children": children.length > 0,
-    "paragraph": {
-      "rich_text": [
-        {"type": "text", "text": {"content": text}, "plain_text": "Answer"}
-      ], 
-      "children": children.length > 0 ? children : undefined
-    }
-  }
-}
-
-const create_questions_page = async (questions) => {
-  const blockId = process.env.NOTION_PAGE_ID
-  const questionBlocks = questions.map((el) => create_toggle(el.question, [create_paragraph(el.answer)]))
-  const response = await notion.pages.create({
-    "icon": {
-      "type": "emoji",
-      "emoji": "📝"
-    },
-    "parent": {
-      "type": "page_id",
-      "page_id": blockId
-    },
-    "properties": {
-      "title": [
-        {
-          type: "text",
-          "text": {
-            "content": "Questions"
-          },
-          "plain_text": "Questions"
-        }
-      ]
-    },
-    "children": [{
-      "object": "block",
-      "heading_2": {
-        "rich_text": [
-          {
-            "text": {
-              "content": "A list of questions"
-            }
-          }
-        ]
-      }
-    },
-    ...questionBlocks
-    ]
-  })
-  return response
-}
-
 app.use(express.static('public'))
 
 app.get('/notes_embed', (req, res) => {
@@ -185,14 +57,13 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.post('/generatequiz/:id', async (req, res) => {
+app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   const note_list = []
-  const data = JSON.parse(req.body)
-  await get_content(data.link, note_list)
-  console.log(note_list)
+  const id = req.params.id
+  await get_content(id, note_list, req.body.link)
+  
   const questions = await generateQuestions(note_list)
-  const response = await create_questions_page(questions)
-
+  const response = await notion.pages.create(create_questions_page(questions, id))
   res.json(response)
 })
 
