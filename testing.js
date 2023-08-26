@@ -1,29 +1,11 @@
-const OpenAI = require('openai')
-const { OpenAIStream, StreamingTextResponse } = require('ai');
- 
-// Create an OpenAI API client (that's edge friendly!)
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
- 
-// Set the runtime to edge for best performance
-const runtime = 'edge';
- 
-const queryGPT = async (prompt, temperature=0.6) => {
-  // Ask OpenAI for a streaming completion given the prompt
-  const response = await openai.chat.completions.create({
-    messages: [{ role: 'user', content: prompt }],
-    model: 'gpt-3.5-turbo',
-    temperature: temperature
-  });
-  return response.choices[0].message.content
+const { runtime, queryGPT } = require('./route')
+
+const isIntegral = (str) => {
+    return /^\+?(0|[1-9]\d*)$/.test(str);
 }
 
-exports.generateQuestions = async (notes) => {
-  const isIntegral = (str) => {
-    return /^\+?(0|[1-9]\d*)$/.test(str);
-  }
-  
+// just for testing, will delete after
+const generateQuestions = async (notes) => {
   // generate 15 questions
   const lines = ["Generate up to 15 questions and answers that are self-contained within this article. For each answer, give two direct quotes within the article supporting it enclosed in quotation marks with parentheses noting the line number you found the quote in. Make sure to test a random subset of lines:", ...(notes.map((x, ind) => `${ind + 1}. "${x[0]}"`))]
   const query = lines.join('\n')
@@ -42,6 +24,7 @@ exports.generateQuestions = async (notes) => {
       // split by a period
       const splitByP = line.split(".", 2)
       const numStr = splitByP[0]
+      console.log(splitByP)
       // whether the current line is the first in the question response
       let isFirst = false
 
@@ -79,3 +62,12 @@ exports.generateQuestions = async (notes) => {
 
   return questions
 }
+
+(async () => {
+  console.log(await generateQuestions(["Child abuse/neglect occurs in all cultural, ethnic, occupational, and socioeconomic groups",
+    "Some are not willful, may result from several factors",
+    "Parental Predisposition (Having been abused/neglected themselves)",
+    "Stress in home (marital, job, financial)",
+    "Parent substance abuse",
+    "Lack of parenting knowledge"]))
+})()
