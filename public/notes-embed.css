@@ -4,8 +4,9 @@ body{
 
 .input {
   position: relative;
-  
-  &__label {
+}
+
+.input__label {
     position: absolute;
     left: 0;
     top: 0;
@@ -20,7 +21,8 @@ body{
     font-weight: bold;
     line-height: 1.2;
   }
-  &__field {
+
+.input__field {
     box-sizing: border-box;
     display: block;
     width: 100%;
@@ -38,4 +40,3 @@ body{
       }
     }
   }
-}

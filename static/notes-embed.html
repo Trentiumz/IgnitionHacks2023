@@ -2,14 +2,14 @@
   <head>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src='/notes-embed.js'></script>
-    <link rel='stylesheet' href='/notes-embed.css'/>
+    <link rel='stylesheet' href='/notes-embed.css' type='text/css'/>
   </head>
   <body>
     <h3>Gnostic Quiz Generation Tool</h3>
     <p id="message"></p>
     <form id='generation-form'>
       <label class='input'>
-        <input class='input__field' type='text' placeholder='' />
+        <input name='notes' class='input__field' type='text' placeholder='' />
         <span class='input__label'>URL of the page you're on</span>
       </label>
       <br />
