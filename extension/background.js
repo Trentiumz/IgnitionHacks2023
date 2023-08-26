@@ -1,4 +1,4 @@
-let url = window.location.href;
+let url = window.location.origin + window.location.pathname;
 let id = url.substring(
   url.lastIndexOf("-") == -1
     ? url.lastIndexOf("/") + 1
@@ -22,14 +22,12 @@ const render = () => {
     button.innerHTML = `<img src="${chrome.runtime.getURL(lightMode ? "loading_black.gif" : "loading.gif")}" width="120" height="80">`;
     button.style.marginTop = "4px";
     console.log(id);
-    await fetch(`http://localhost:3000/generatequiz/${id}`, {
+    await fetch(`https://ignitionhacks2023.danielye6.repl.co/generatequiz/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
-        "link": url,
-      }
+      body: JSON.stringify({ link: url }),
     }).then((response) => {
         console.log(response);
         button.innerHTML = `<img src="${chrome.runtime.getURL(lightMode ? "logo_black.png" : "logo.png")}" width="120" height="30">`;
