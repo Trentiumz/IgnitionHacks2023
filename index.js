@@ -50,8 +50,6 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
   }
 }
 
-app.use(express.static('public'))
-
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -65,20 +63,6 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   console.log(questions)
   const response = await notion.pages.create(create_questions_page(questions, id, note_list))
   res.status(200).json(response)
-})
-
-app.post('/read-page-content', async (req, res) => {
-  const response = []
-  await get_content(process.env.NOTION_PAGE_ID, response)
-  res.json(response)
-})
-
-app.post('/read-raw-page', async (req, res) => {
-  const blockId = process.env.NOTION_PAGE_ID
-  const response = await notion.blocks.children.list({
-    block_id: blockId
-  })
-  res.json(response)
 })
 
 app.listen(port, () => {
