@@ -7,7 +7,7 @@ const isIntegral = (str) => {
 // just for testing, will delete after
 const generateQuestions = async (notes) => {
   // generate 15 questions
-  const lines = ["Generate up to 15 questions and answers that are self-contained within this article. For each answer, give two direct quotes within the article supporting it enclosed in quotation marks with parentheses noting the line number you found the quote in. Make sure to test a random subset of lines:", ...(notes.map((x, ind) => `${ind + 1}. "${x}"`))]
+  const lines = ["Generate up to 15 questions and answers that are self-contained within this article. For each answer, give two direct quotes within the article supporting it enclosed in quotation marks with parentheses noting the line number you found the quote in. Make sure to test a random subset of lines:", ...(notes.map((x, ind) => `${ind + 1}. "${x[0]}"`))]
   const query = lines.join('\n')
   const response = (await queryGPT(query, temperature = 0)).split('\n')
 

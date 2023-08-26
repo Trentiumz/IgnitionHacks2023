@@ -13,16 +13,22 @@ const rich_to_plain = (rich_text) => {
 }
 
 async function get_content(id, text_values, link="https://www.notion.so/Test-Notes-069351ce9b824ceb9919f1102e82d0a1") {
+  // query page
   const blockId = id
   const response = await notion.blocks.children.list({
     block_id: blockId
   })
-  link += "pvs=1#" // pog
+  link += "pvs=1#" 
+
+  // recursively search responses, adding text & blocks to a list
   for (let i = 0; i < response.results.length; i++){ 
     const el = response.results[i]
     const properties = ['bulleted_list_item', 'numbered_list_item', 'paragraph', 'quote', 'toggle']
+
+    // allowed property types
     for(let property of properties){
       if(el.type === property){
+        // if the property matches, add it
         if(el[property].rich_text.length > 0){
           const currAns = [rich_to_plain(el[property].rich_text)]
           currAns.push(link + el.id.split('-').join (''))
@@ -30,7 +36,8 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
         }
       }
     }
-    
+
+    // recursively search
     if (el.has_children && el.type != 'child_page') {
       await get_content(el.id, text_values)
     }
@@ -43,7 +50,7 @@ const isIntegral = (str) => {
 
 const generateQuestions = async (notes) => {
   // generate 15 questions
-  const lines = ["Generate up to 15 questions and answers that are self-contained within this article. For each answer, give two direct quotes within the article supporting it enclosed in quotation marks with parentheses noting the line number you found the quote in. Make sure to test a random subset of lines:", ...(notes.map((x, ind) => `${ind + 1}. "${x}"`))]
+  const lines = ["Generate up to 15 questions and answers that are self-contained within this article. For each answer, give two direct quotes within the article supporting it enclosed in quotation marks with parentheses noting the line number you found the quote in. Make sure to test a random subset of lines:", ...(notes.map((x, ind) => `${ind + 1}. "${x[0]}"`))]
   const query = lines.join('\n')
   const response = (await queryGPT(query, temperature = 0)).split('\n')
 
@@ -180,7 +187,8 @@ app.get('/', (req, res) => {
 
 app.post('/generatequiz/:id', async (req, res) => {
   const note_list = []
-  await get_content(req.params.id, note_list)
+  const data = JSON.parse(req.body)
+  await get_content(data.link, note_list)
   console.log(note_list)
   const questions = await generateQuestions(note_list)
   const response = await create_questions_page(questions)
