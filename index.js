@@ -64,7 +64,7 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   const questions = await generateQuestions(note_list)
   console.log(questions)
   const response = await notion.pages.create(create_questions_page(questions, id, note_list))
-  res.json(response)
+  res.status(200).json(response)
 })
 
 app.post('/read-page-content', async (req, res) => {
