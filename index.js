@@ -47,8 +47,6 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
   }
 }
 
-app.use(express.static('public'))
-
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
