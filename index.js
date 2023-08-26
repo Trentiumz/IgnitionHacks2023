@@ -62,20 +62,6 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   res.json(response)
 })
 
-app.post('/read-page-content', async (req, res) => {
-  const response = []
-  await get_content(process.env.NOTION_PAGE_ID, response)
-  res.json(response)
-})
-
-app.post('/read-raw-page', async (req, res) => {
-  const blockId = process.env.NOTION_PAGE_ID
-  const response = await notion.blocks.children.list({
-    block_id: blockId
-  })
-  res.json(response)
-})
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
