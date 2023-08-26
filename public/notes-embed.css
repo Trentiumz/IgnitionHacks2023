@@ -2,7 +2,7 @@
 
 :root {
   --color-dark: #212121;
-  --color-background: white;
+  --color-background: #EEEEEE;
   --color-focused: #CCCCCC;
 
   --size-bezel: .5rem;
@@ -21,6 +21,9 @@
 
 body{
   text-align: center;
+  background-color: var(--color-background);
+  height: 100%;
+  width: 100%;
 }
 
 .input-container{

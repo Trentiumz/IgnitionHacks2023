@@ -24,6 +24,8 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+
+
 app.post('/read-page-content', async (req, res) => {
   const response = await get_content()
   res.json(response)
@@ -54,7 +56,7 @@ app.post('/add-sample-content', async (req, res) => {
   res.json(response)
 })
 
-
+//Creates new page to store Q&A
 app.post('/add-sample-content1', async (req, res) => {
   const blockId = process.env.NOTION_PAGE_ID
   const q = ["1", "2", "3"]
@@ -65,23 +67,22 @@ app.post('/add-sample-content1', async (req, res) => {
           "emoji": "📝"
         },
         "parent": {
-          "type": "database_id",
-          "database_id": blockId
+          "type": "page_id",
+          "page_id": blockId
         },
         "properties": {
-          "Name": {
-            "title": [
-              {
-                "text": {
-                  "content": "Questions"
-                }
-              }
-            ]
-          }
+          "title":[
+            {
+              type: "text",
+              "text": {
+                  "content": "Questions" 
+              },
+              "plain_text": "Questions"
+            }
+          ]
         },
         "children": [{
             "object": "block",
-            "type": "heading_2",
             "heading_2": {
                 "rich_text": [
                     {
