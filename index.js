@@ -14,6 +14,10 @@ const get_content = async () => {
   return response
 }
 
+const returnParsedNotes = async () +> {
+  
+}
+
 app.use(express.static('public'))
 
 app.get('/notes_embed', (req, res) => {
