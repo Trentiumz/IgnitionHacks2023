@@ -1,9 +1,19 @@
 <html>
   <head>
-    <script src="/notes-embed.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src='/notes-embed.js'></script>
+    <link rel='stylesheet' href='/notes-embed.css'/>
   </head>
   <body>
-    <h1>omg an embed</h1>
-    <p id="content"></p>
+    <h3>Gnostic Quiz Generation Tool</h3>
+    <p id="message"></p>
+    <form id='generation-form'>
+      <label class='input'>
+        <input class='input__field' type='text' placeholder='' />
+        <span class='input__label'>URL of the page you're on</span>
+      </label>
+      <br />
+      <input type="submit" value="Generate Quiz!" class="submit-button"/>
+    </form>
   </body>
 </html>
