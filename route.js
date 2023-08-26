@@ -1,5 +1,5 @@
-import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
+const OpenAI = require('openai')
+const { OpenAIStream, StreamingTextResponse } = require('ai');
  
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({
@@ -7,19 +7,14 @@ const openai = new OpenAI({
 });
  
 // Set the runtime to edge for best performance
-export const runtime = 'edge';
+exports.runtime = 'edge';
  
-export async function POST(prompt) {  
+exports.queryGPT = async (prompt, temperature=0.6) => {
   // Ask OpenAI for a streaming completion given the prompt
-  const response = await openai.completions.create({
-    model: 'text-davinci-003',
-    stream: true,
-    temperature: 0.6,
-    max_tokens: 300,
-    prompt: `${prompt}`,
+  const response = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: prompt }],
+    model: 'gpt-3.5-turbo',
+    temperature: temperature
   });
-  // Convert the response into a friendly text-stream
-  const stream = OpenAIStream(response);
-  // Respond with the stream
-  return new StreamingTextResponse(stream);
+  return response.choices[0].message.content
 }
