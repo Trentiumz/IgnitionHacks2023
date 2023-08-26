@@ -24,7 +24,7 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
   const response = await notion.blocks.children.list({
     block_id: blockId
   })
-  link += "pvs=1#" 
+  link += "?pvs=1#" 
 
   // recursively search responses, adding text & blocks to a list
   for (let i = 0; i < response.results.length; i++){ 
@@ -52,10 +52,6 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
 
 app.use(express.static('public'))
 
-app.get('/notes_embed', (req, res) => {
-  res.sendFile(__dirname + "/static/notes-embed.html")
-})
-
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -64,10 +60,11 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   const note_list = []
   const id = req.params.id
   await get_content(id, note_list, req.body.link)
-  
+
   const questions = await generateQuestions(note_list)
-  const response = await notion.pages.create(create_questions_page(questions, id))
-  res.status(200).json(response)
+  console.log(questions)
+  const response = await notion.pages.create(create_questions_page(questions, id, note_list))
+  res.json(response)
 })
 
 app.post('/read-page-content', async (req, res) => {
@@ -80,65 +77,6 @@ app.post('/read-raw-page', async (req, res) => {
   const blockId = process.env.NOTION_PAGE_ID
   const response = await notion.blocks.children.list({
     block_id: blockId
-  })
-  res.json(response)
-})
-
-app.post('/add-sample-content', async (req, res) => {
-  const blockId = process.env.NOTION_PAGE_ID
-  const response = await notion.blocks.children.append({
-    block_id: blockId,
-    children: [
-      {
-        object: 'block',
-        type: 'paragraph',
-        paragraph: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Sample Text!'
-              },
-              plain_text: 'text'
-            }
-          ]
-        }
-      }
-    ]
-  })
-  res.json(response)
-})
-
-//Creates new page to store Q&A
-app.post('/add-sample-content1', async (req, res) => {
-  const blockId = process.env.NOTION_PAGE_ID
-
-  const response = await create_questions_page([
-    {
-      question: "Question",
-      answer: "Answer"
-    },
-    {
-      question: "Quackity",
-      answer: "Answerity"
-    },
-    {
-      question: "yayyy",
-      answer: "no."
-    },
-  ])
-  res.json(response)
-})
-
-app.get('/get-page-list', async (req, res) => {
-  const response = await notion.search({
-    filter: {
-      value: 'page',
-      property: 'object'
-    }, sort: {
-      direction: 'descending',
-      timestamp: 'last_edited_time'
-    }
   })
   res.json(response)
 })

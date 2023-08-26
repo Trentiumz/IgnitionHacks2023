@@ -12,7 +12,44 @@ const create_toggle = (top_text, children) => {
   }
 }
 
-const create_paragraph = (text, children=[]) => {
+const create_paragraph = (text, note_list, children=[]) => {
+  const refInd = text.search("\\(Line \\d+(\\-\\d+)?\\)")
+  
+  if(refInd >= 0){
+    let closeInd = text.slice(refInd).search("\\)|\\-")
+    if(closeInd >= 0) closeInd += refInd
+    
+    if(closeInd >= 0){
+      const before = text.substr(0, refInd+1)
+      const after = text.substr(closeInd)
+      const index = parseInt(text.substr(refInd+6, closeInd))
+      const toInclude = index <= note_list.length
+      if(toInclude){
+        return {
+          "object": "block",
+          "type": "paragraph",
+          "has_children": children.length > 0,
+          "paragraph": {
+            "rich_text": [
+              {"type": "text", "text": {"content": before}, "plain_text": before},
+              {"type": "text", "text": {
+                  "content": "source",
+                  "link": {
+                    "url": note_list[index-1][1]
+                  }
+                }, 
+                "plain_text": "source"
+              },
+              {"type": "text", "text": {"content": after}, "plain_text": after}
+            ], 
+            "children": children.length > 0 ? children : undefined
+          }
+        } 
+      } else {
+        text = text.substr(0, refInd).trim()
+      }
+    }
+  }
   return {
     "object": "block",
     "type": "paragraph",
@@ -26,12 +63,12 @@ const create_paragraph = (text, children=[]) => {
   }
 }
 
-const create_paragraphs = (text) => {
-  return text.map((x) => create_paragraph(x))
+const create_paragraphs = (text, note_list) => {
+  return text.map((x) => create_paragraph(x, note_list))
 }
 
-exports.create_questions_page = (questions, blockId) => {
-  const questionBlocks = questions.map((el) => create_toggle(el.question, create_paragraphs(el.answer)))
+exports.create_questions_page = (questions, blockId, note_list) => {
+  const questionBlocks = questions.map((el) => create_toggle(el.question, create_paragraphs(el.answer, note_list)))
   return {
     "icon": {
       "type": "emoji",
