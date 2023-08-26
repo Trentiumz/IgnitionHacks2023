@@ -49,10 +49,6 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
 
 app.use(express.static('public'))
 
-app.get('/notes_embed', (req, res) => {
-  res.sendFile(__dirname + "/static/notes-embed.html")
-})
-
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -78,65 +74,6 @@ app.post('/read-raw-page', async (req, res) => {
   const blockId = process.env.NOTION_PAGE_ID
   const response = await notion.blocks.children.list({
     block_id: blockId
-  })
-  res.json(response)
-})
-
-app.post('/add-sample-content', async (req, res) => {
-  const blockId = process.env.NOTION_PAGE_ID
-  const response = await notion.blocks.children.append({
-    block_id: blockId,
-    children: [
-      {
-        object: 'block',
-        type: 'paragraph',
-        paragraph: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Sample Text!'
-              },
-              plain_text: 'text'
-            }
-          ]
-        }
-      }
-    ]
-  })
-  res.json(response)
-})
-
-//Creates new page to store Q&A
-app.post('/add-sample-content1', async (req, res) => {
-  const blockId = process.env.NOTION_PAGE_ID
-
-  const response = await create_questions_page([
-    {
-      question: "Question",
-      answer: "Answer"
-    },
-    {
-      question: "Quackity",
-      answer: "Answerity"
-    },
-    {
-      question: "yayyy",
-      answer: "no."
-    },
-  ])
-  res.json(response)
-})
-
-app.get('/get-page-list', async (req, res) => {
-  const response = await notion.search({
-    filter: {
-      value: 'page',
-      property: 'object'
-    }, sort: {
-      direction: 'descending',
-      timestamp: 'last_edited_time'
-    }
   })
   res.json(response)
 })
