@@ -14,54 +14,33 @@ const create_toggle = (top_text, children) => {
 
 const create_paragraph = (text, note_list, children=[]) => {
   const refInd = text.search("\\(Lines? \\d+(\\-\\d+)?\\)")
+  const parts = text.split("\"").flatMap((val, ind, arr) => arr.length - 1 !== ind ? [val, "\""]: val);
   
-  if(refInd >= 0){
-    let closeInd = text.slice(refInd).search("\\)|\\-")
-    if(closeInd >= 0) closeInd += refInd
-    let closeBracket = text.indexOf(")", refInd)
-    
-    if(closeInd >= 0){
-      const before = text.substr(0, refInd+1)
-      const after = text.substr(closeBracket)
-      const index = parseInt(text.substr(refInd+6+(text.charAt(refInd+5) === 's' ? 1 : 0), closeInd))
-      const toInclude = index <= note_list.length
-      if(toInclude){
-        return {
-          "object": "block",
-          "type": "paragraph",
-          "has_children": children.length > 0,
-          "paragraph": {
-            "rich_text": [
-              {"type": "text", "text": {"content": before}, "plain_text": before},
-              {"type": "text", "text": {
-                  "content": "source",
-                  "link": {
-                    "url": note_list[index-1][1]
-                  }
-                }, 
-                "plain_text": "source"
-              },
-              {"type": "text", "text": {"content": after}, "plain_text": after}
-            ], 
-            "children": children.length > 0 ? children : undefined
-          }
-        } 
-      } else {
-        text = text.substr(0, refInd).trim()
+  const parsedParts = parts.map((el) => {
+    if(el !== "\"" && el !== ""){
+      const sourceLine = note_list.find((line) => line[0].includes(el))
+      if(sourceLine){
+        return {"type": "text", "text": {
+            "content": el,
+            "link": {
+              "url": sourceLine[1]
+            }
+          }, 
+          "plain_text": sourceLine[0]
+        }
       }
     }
-  }
+    return {"type": "text", "text": {"content": el}, "plain_text": el}
+  })
   return {
     "object": "block",
     "type": "paragraph",
     "has_children": children.length > 0,
     "paragraph": {
-      "rich_text": [
-        {"type": "text", "text": {"content": text}, "plain_text": "Answer"}
-      ], 
+      "rich_text": parsedParts, 
       "children": children.length > 0 ? children : undefined
     }
-  }
+  } 
 }
 
 const create_paragraphs = (text, note_list) => {

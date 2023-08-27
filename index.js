@@ -18,13 +18,12 @@ const rich_to_plain = (rich_text) => {
   return rich_text.reduce((acc, cur) => acc + cur.plain_text, "")
 }
 
-async function get_content(id, text_values, link="https://www.notion.so/Test-Notes-069351ce9b824ceb9919f1102e82d0a1") {
+async function get_content(id, text_values, link) {
   // query page
   const blockId = id
   const response = await notion.blocks.children.list({
     block_id: blockId
   })
-  link += "?pvs=1#" 
 
   // recursively search responses, adding text & blocks to a list
   for (let i = 0; i < response.results.length; i++){ 
@@ -45,7 +44,7 @@ async function get_content(id, text_values, link="https://www.notion.so/Test-Not
 
     // recursively search
     if (el.has_children && el.type != 'child_page') {
-      await get_content(el.id, text_values)
+      await get_content(el.id, text_values, link)
     }
   }
 }
@@ -57,11 +56,11 @@ app.get('/', (req, res) => {
 app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   const note_list = []
   const id = req.params.id
-  await get_content(id, note_list, req.body.link)
+  await get_content(id, note_list, req.body.link + "?pvs=1#")
 
   const questions = await generateQuestions(note_list)
-  console.log(questions)
-  const response = await notion.pages.create(create_questions_page(questions, id, note_list))
+  const newPage = create_questions_page(questions, id, note_list)
+  const response = await notion.pages.create(newPage)
   res.status(200).json(response)
 })
 
