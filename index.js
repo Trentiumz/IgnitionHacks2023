@@ -59,7 +59,7 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   const id = req.params.id
   const ret = false
   await notion.blocks.children.list({
-    block_id: blockId
+    block_id: id
   }).then((response) => {
     if(response.results.length === 0){
       res.status(400).json({error: "No content found"})
