@@ -15,10 +15,10 @@ const genPopup = (text) => {
   popup.style.left = window.innerWidth / 2 - 50 + "px";
   popup.style.width = "220px";
   popup.style.height = "65px";
-  popup.style.backgroundColor = "#5891ed";
+  popup.style.backgroundColor = "#fbb344";
   popup.style.padding = "10px";
   popup.style.borderRadius = "10px";
-  popup.style.color = "white";
+  popup.style.color = "black";
   popup.style.fontFamily = "Helvetica";
   popup.style.fontSize = "16px";
   popup.style.fontWeight = "bold";
