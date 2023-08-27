@@ -57,8 +57,17 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   console.log('request at ' + req.body.link)
   const note_list = []
   const id = req.params.id
+  const ret = false
+  await notion.blocks.children.list({
+    block_id: blockId
+  }).then((response) => {
+    if(response.results.length === 0){
+      res.status(400).json({error: "No content found"})
+      ret = true
+    }
+  })
+  if(ret) return
   await get_content(id, note_list, req.body.link + "?pvs=1#")
-
   const questions = await generateQuestions(note_list)
   const newPage = create_questions_page(questions, id, note_list)
   const response = await notion.pages.create(newPage)
