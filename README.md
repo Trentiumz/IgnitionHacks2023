@@ -20,7 +20,7 @@ Download the extension folder, then add it to your browser by going to Extension
 
 ### Testing
 
-**To try out our integration, check out our test workspace at [here](https://www.notion.so/invite/62ca4cb16817e4239716d000cf4bed81f34073ff).**
+**To try out our integration, check out our test workspace [here](https://www.notion.so/invite/62ca4cb16817e4239716d000cf4bed81f34073ff).**
 
 ### Public
 
