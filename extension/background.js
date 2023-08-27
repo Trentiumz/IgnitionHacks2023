@@ -44,12 +44,12 @@ const render = () => {
   button.className = "gnostic-button";
   button.innerHTML = `<img src="${chrome.runtime.getURL(
     lightMode ? "logo_black.png" : "logo.png"
-  )}" width="120" height="25">`;
+  )}" width="120" height="23">`;
   button.style.position = "relative";
   button.style.backgroundColor = "transparent";
   button.style.border = "none";
   button.style.marginRight = "10px";
-  button.style.marginTop = "4px";
+  button.style.marginTop = "6px";
   topbar.prepend(button);
   button.addEventListener("click", async function () {
     if (loading) {
@@ -60,7 +60,7 @@ const render = () => {
     button.innerHTML = `<img src="${chrome.runtime.getURL(
       lightMode ? "loading_black.gif" : "loading.gif"
     )}" width="130" height="150">`;
-    button.style.marginTop = "4px";
+    button.style.marginTop = "6px";
     console.log(id);
     await fetch(
       `https://ignitionhacks2023.danielye6.repl.co/generatequiz/${id}`,
@@ -77,8 +77,8 @@ const render = () => {
         console.log(response);
         button.innerHTML = `<img src="${chrome.runtime.getURL(
           lightMode ? "logo_black.png" : "logo.png"
-        )}" width="120" height="25">`;
-        button.style.marginTop = "4px";
+        )}" width="120" height="23">`;
+        button.style.marginTop = "6px";
         genPopup(
           response.status === 200
             ? "Successfully generated quiz!"
@@ -90,8 +90,8 @@ const render = () => {
         console.log(error);
         button.innerHTML = `<img src="${chrome.runtime.getURL(
           lightMode ? "logo_black.png" : "logo.png"
-        )}" width="120" height="25">`;
-        button.style.marginTop = "4px";
+        )}" width="120" height="23">`;
+        button.style.marginTop = "6px";
         genPopup("Failed to generate quiz. Try Again.");
       });
   });
@@ -108,7 +108,7 @@ const render = () => {
         } else {
           button.innerHTML = `<img src="${chrome.runtime.getURL(
             lightMode ? "logo_black.png" : "logo.png"
-          )}" width="120" height="25">`;
+          )}" width="120" height="23">`;
         }
       }
     });
