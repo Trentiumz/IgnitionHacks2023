@@ -54,6 +54,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/generatequiz/:id', jsonParser, async (req, res) => {
+  console.log('request at ' + req.body.link)
   const note_list = []
   const id = req.params.id
   await get_content(id, note_list, req.body.link + "?pvs=1#")
@@ -62,6 +63,11 @@ app.post('/generatequiz/:id', jsonParser, async (req, res) => {
   const newPage = create_questions_page(questions, id, note_list)
   const response = await notion.pages.create(newPage)
   res.status(200).json(response)
+})
+
+app.use(express.static('public'))
+app.get('/private_policy', (req, res) => {
+  res.sendFile(__dirname + "/static/privatepolicy.html")
 })
 
 app.listen(port, () => {
