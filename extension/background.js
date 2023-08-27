@@ -1,10 +1,3 @@
-let url = window.location.origin + window.location.pathname;
-let id = url.substring(
-  url.lastIndexOf("-") == -1
-    ? url.lastIndexOf("/") + 1
-    : url.lastIndexOf("-") + 1,
-  url.indexOf("?") == -1 ? url.length : url.indexOf("?")
-);
 let loading = false;
 
 const genPopup = (text) => {
@@ -34,6 +27,13 @@ const genPopup = (text) => {
 };
 
 const render = () => {
+  let url = window.location.origin + window.location.pathname;
+  let id = url.substring(
+    url.lastIndexOf("-") == -1
+      ? url.lastIndexOf("/") + 1
+      : url.lastIndexOf("-") + 1,
+    url.indexOf("?") == -1 ? url.length : url.indexOf("?")
+  );
   var topbar = document
     .getElementsByClassName("notion-topbar-action-buttons")
     .item(0);
@@ -44,7 +44,7 @@ const render = () => {
   button.className = "gnostic-button";
   button.innerHTML = `<img src="${chrome.runtime.getURL(
     lightMode ? "logo_black.png" : "logo.png"
-  )}" width="120" height="30">`;
+  )}" width="120" height="25">`;
   button.style.position = "relative";
   button.style.backgroundColor = "transparent";
   button.style.border = "none";
@@ -77,7 +77,7 @@ const render = () => {
         console.log(response);
         button.innerHTML = `<img src="${chrome.runtime.getURL(
           lightMode ? "logo_black.png" : "logo.png"
-        )}" width="120" height="30">`;
+        )}" width="120" height="25">`;
         button.style.marginTop = "4px";
         genPopup(
           response.status === 200
@@ -90,7 +90,7 @@ const render = () => {
         console.log(error);
         button.innerHTML = `<img src="${chrome.runtime.getURL(
           lightMode ? "logo_black.png" : "logo.png"
-        )}" width="120" height="30">`;
+        )}" width="120" height="25">`;
         button.style.marginTop = "4px";
         genPopup("Failed to generate quiz. Try Again.");
       });
@@ -108,7 +108,7 @@ const render = () => {
         } else {
           button.innerHTML = `<img src="${chrome.runtime.getURL(
             lightMode ? "logo_black.png" : "logo.png"
-          )}" width="120" height="30">`;
+          )}" width="120" height="25">`;
         }
       }
     });
