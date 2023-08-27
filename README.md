@@ -2,6 +2,8 @@
 
 gnostic is a [Notion](https://www.notion.so/) plugin that allows students to create quiz-style questions from their notes with the click of a button. 
 
+![img](static/image%20(3).png)
+
 ## Installation
 
 1. Install the gnostic chrome extension.
