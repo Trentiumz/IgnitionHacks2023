@@ -27,13 +27,6 @@ const genPopup = (text) => {
 };
 
 const render = () => {
-  let url = window.location.origin + window.location.pathname;
-  let id = url.substring(
-    url.lastIndexOf("-") == -1
-      ? url.lastIndexOf("/") + 1
-      : url.lastIndexOf("-") + 1,
-    url.indexOf("?") == -1 ? url.length : url.indexOf("?")
-  );
   var topbar = document
     .getElementsByClassName("notion-topbar-action-buttons")
     .item(0);
@@ -52,6 +45,13 @@ const render = () => {
   button.style.marginTop = "6px";
   topbar.prepend(button);
   button.addEventListener("click", async function () {
+    let url = window.location.origin + window.location.pathname;
+    let id = url.substring(
+      url.lastIndexOf("-") == -1
+        ? url.lastIndexOf("/") + 1
+        : url.lastIndexOf("-") + 1,
+      url.indexOf("?") == -1 ? url.length : url.indexOf("?")
+    );
     if (loading) {
       genPopup("Quiz generation in progress.");
       return;
