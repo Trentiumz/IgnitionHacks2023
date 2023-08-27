@@ -17,7 +17,7 @@ const create_paragraph = (text, note_list, children=[]) => {
   const parts = text.split("\"").flatMap((val, ind, arr) => arr.length - 1 !== ind ? [val, "\""]: val);
   
   const parsedParts = parts.map((el) => {
-    if(el !== "\"" && el !== ""){
+    if(el !== "\"" && el.length > 3){
       const sourceLine = note_list.find((line) => line[0].includes(el))
       if(sourceLine){
         return {"type": "text", "text": {
