@@ -18,6 +18,10 @@ Download the extension folder, then add it to your browser by going to Extension
 
 2. Add the gnostic notion plugin.
 
+### Testing
+
+**To try out our integration, check out our test workspace at [here](https://www.notion.so/invite/62ca4cb16817e4239716d000cf4bed81f34073ff).**
+
 ### Public
 
 Available soon.
@@ -25,10 +29,6 @@ Available soon.
 ### Internal
 
 In your notion workspace, add an internal integration through the [Developer Portal](https://www.notion.so/my-integrations/). The server can then be configured with the Internal Integration Secret.
-
-### Testing
-
-**To try out our integration, check out our test workspace at [here](https://www.notion.so/invite/62ca4cb16817e4239716d000cf4bed81f34073ff).**
 
 ![Internal](static/internal.png)
 
