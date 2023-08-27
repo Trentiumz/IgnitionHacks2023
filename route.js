@@ -24,7 +24,7 @@ exports.generateQuestions = async (notes) => {
   }
   
   // generate 15 questions
-  const lines = ["Consider the following article:", ...(notes.map((x) => `* "${x[0]}"`)), "Generate questions and answers about this article. For each answer, provide a clear response that answers the question. After that, support your answer with a direct quote from the article enclosed in quotation marks. Ask exactly 15 questions. Ask questions that include parts from the beginning, middle, and end of the article (not just the beginning):"]
+  const lines = ["Consider the following article:", ...(notes.map((x) => `* "${x[0]}"`)), "Generate questions and answers about this article. Ask exactly 15 questions. Ask questions that include parts from the beginning, middle, and end of the article (not just the beginning). For each response: First, provide a direct and clear answer to the question. Second, provide a direct quote from the article enclosed in quotation marks.", "An example is as such", "1. What is electric current", "A: Electric current is the flow of electric charges through a conductor", "Source: \"Electric current = flow of charge through conductor\""]
   const query = lines.join('\n')
   const response = (await queryGPT(query, temperature=0.2)).split('\n')
 

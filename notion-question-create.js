@@ -18,8 +18,15 @@ const create_paragraph = (text, note_list, children=[]) => {
   
   const parsedParts = parts.map((el) => {
     if(el !== "\"" && el.length > 3){
-      const sourceLine = note_list.find((line) => line[0].includes(el))
-      if(sourceLine){
+      const sourceLine = note_list.reduce((acc, line) => {
+        if(line[0].includes(el) || el.includes(line[0])){
+          if(line[0].length > acc[0].length){
+            return line;
+          }
+        }
+        return acc
+      }, ["", ""])
+      if(sourceLine[0].length > 3){
         return {"type": "text", "text": {
             "content": el,
             "link": {
