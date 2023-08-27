@@ -9,14 +9,12 @@ const openai = new OpenAI({
 const runtime = 'edge';
  
 const queryGPT = async (prompt, temperature=0.6) => {
-  console.log(prompt)
   // Ask OpenAI for a streaming completion given the prompt
   const response = await openai.chat.completions.create({
     messages: [{ role: 'user', content: prompt }],
     model: 'gpt-3.5-turbo',
     temperature: temperature
   });
-  console.log(response.choices[0].message.content)
   return response.choices[0].message.content
 }
 
@@ -26,9 +24,9 @@ exports.generateQuestions = async (notes) => {
   }
   
   // generate 15 questions
-  const lines = ["Consider the following article:", ...(notes.map((x) => `* "${x[0]}"`)), "Generate questions and answers about this article. For each answer, provide a clear response that answers the question. After that, support your answer with a direct quote from the article enclosed in quotation marks. Also note the line number you found the quote in (in the form '(Line {line number})'). Ask exactly 15 questions. Ask questions that include parts from the beginning, middle, and end of the article (not just the beginning):"]
+  const lines = ["Consider the following article:", ...(notes.map((x) => `* "${x[0]}"`)), "Generate questions and answers about this article. For each answer, provide a clear response that answers the question. After that, support your answer with a direct quote from the article enclosed in quotation marks. Ask exactly 15 questions. Ask questions that include parts from the beginning, middle, and end of the article (not just the beginning):"]
   const query = lines.join('\n')
-  const response = (await queryGPT(query)).split('\n')
+  const response = (await queryGPT(query, temperature=0.2)).split('\n')
 
   // loop through the questions
   let curQ = 0
