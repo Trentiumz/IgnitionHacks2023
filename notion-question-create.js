@@ -13,16 +13,17 @@ const create_toggle = (top_text, children) => {
 }
 
 const create_paragraph = (text, note_list, children=[]) => {
-  const refInd = text.search("\\(Line \\d+(\\-\\d+)?\\)")
+  const refInd = text.search("\\(Lines? \\d+(\\-\\d+)?\\)")
   
   if(refInd >= 0){
     let closeInd = text.slice(refInd).search("\\)|\\-")
     if(closeInd >= 0) closeInd += refInd
+    let closeBracket = text.indexOf(")", refInd)
     
     if(closeInd >= 0){
       const before = text.substr(0, refInd+1)
-      const after = text.substr(closeInd)
-      const index = parseInt(text.substr(refInd+6, closeInd))
+      const after = text.substr(closeBracket)
+      const index = parseInt(text.substr(refInd+6+(text.charAt(refInd+5) === 's' ? 1 : 0), closeInd))
       const toInclude = index <= note_list.length
       if(toInclude){
         return {
