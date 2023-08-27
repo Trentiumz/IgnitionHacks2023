@@ -30,7 +30,7 @@ Available soon.
 
 In your notion workspace, add an internal integration through the [Developer Portal](https://www.notion.so/my-integrations/). The server can then be configured with the Internal Integration Secret.
 
-![Internal](static/internal.png)
+![internal](internal.png)
 
 3. Start writing your notes!
 4. Press the gnostic button to generate a new page of questions based off your notes.
