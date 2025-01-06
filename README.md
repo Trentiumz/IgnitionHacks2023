@@ -36,3 +36,8 @@ In your notion workspace, add an internal integration through the [Developer Por
 
 3. Start writing your notes!
 4. Press the gnostic button to generate a new page of questions based off your notes.
+
+### Contribution
+
+Frontend: Max Sun, Zoe Fan-Chiang
+Backend: Max Sun, Daniel Ye, Ethan Zhu
